@@ -1,0 +1,25 @@
+.main-section{
+    max-width: 1499px;
+    width: 90%;
+}
+.sidebar-sticky {
+    position: sticky;
+    top: 50px;
+    height: 100%;
+    width: 300px;
+    margin-bottom: 50px;
+}
+.center-section{
+    width: calc(100% - 600px);
+}
+@media (max-width: 1023px) {
+    .sidebar-sticky {
+        position: relative;
+        width: 100%;
+        top: 0;
+        margin-bottom: 20px;
+    }
+    .center-section{
+        width: calc(100% - 0px);
+    }
+}
