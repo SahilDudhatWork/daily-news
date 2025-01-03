@@ -1028,9 +1028,9 @@
                       >
                         <a
                           class="hstack d-inline-flex gap-0 text-none hover:text-primary duration-150"
-                          href="/category/astrology"
+                          href="/category/stock-market"
                         >
-                          <span>Astrology</span>
+                          <span>Stock Market</span>
                           <i class="icon-1 fw-bold unicon-chevron-right"></i>
                         </a>
                       </h2>
@@ -1041,7 +1041,7 @@
                         data-uc-grid
                       >
                         <div
-                          v-for="(item, key) in categoriesWithPost.Astrology"
+                          v-for="(item, key) in categoriesWithPost.StockMarket"
                           :key="key"
                         >
                           <article
@@ -1297,6 +1297,7 @@
                           </div>
                         </div>
                       </div>
+                      <div data-type="_mgwidget" data-widget-id="1717791"></div>
                       <div class="block-footer cstack lg:mt-2">
                         <a
                           href="/category/latest"
@@ -1382,6 +1383,12 @@ export default {
   head() {
     return {
       title: "Daily Times | News",
+      script: [
+        {
+          src: "https://jsc.adskeeper.com/site/1005501.js",
+          async: true,
+        },
+      ],
       meta: [
         { name: "google-adsense-account", content: "ca-pub-7232228922121987" },
       ],
@@ -1434,10 +1441,18 @@ export default {
         this.initAds();
       }
     }
-
+    (function (w, q) {
+      w[q] = w[q] || [];
+      w[q].push(["_mgc.load"]);
+    })(window, "_mgq");
     await this.fetchCategoriesWithPost({});
 
     // this.$setMeta("Dynamic Page Title", "Dynamic description for this page");
   },
 };
 </script>
+<style lang="css" scoped>
+div[data-widget-id="1717791"] {
+  min-height: 300px;
+}
+</style>

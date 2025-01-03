@@ -53,8 +53,11 @@ export const actions = {
   async fetchPostBySlug(ctx, payload) {
     try {
       let { slug = "" } = payload;
-      const res = await $axios.get(`/post/${slug}`);
-      console.log("res.data", res.data);
+      let path = slug;
+      if (slug.endsWith("/")) {
+        path = slug.slice(0, -1); // Remove the trailing slash
+      }
+      const res = await $axios.get(`/post/${path}`);
       ctx.commit("setSinglePost", res.data);
 
       return res;

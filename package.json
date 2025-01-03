@@ -6,11 +6,13 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+      "postgenerate": "node post-build.js"
+
   },
   "dependencies": {
     "autoprefixer": "^10.4.20",
-    "axios": "^1.7.7",
+    "axios": "^1.7.9",
     "core-js": "^3.25.3",
     "js-cookie": "^3.0.5",
     "nuxt": "^2.15.8",
@@ -18,7 +20,7 @@
     "v-click-outside": "^3.2.0",
     "vue": "^2.7.10",
     "vue-particles": "^1.0.9",
-    "vue-server-renderer": "^2.7.10",
+    "vue-server-renderer": "^2.7.16",
     "vue-slick": "^1.2.0",
     "vue-slick-carousel": "^1.0.6",
     "vue-template-compiler": "^2.7.10",

@@ -99,13 +99,13 @@
             <div class="navbar-container hstack border-bottom">
               <div class="uc-navbar-center gap-2 lg:gap-3 flex-1">
                 <ul
-                  class="uc-navbar-nav gap-3 justify-between flex-1 fs-6 fw-bold"
+                  class="uc-navbar-nav gap-2 justify-between flex-1 fs-6 fw-bold"
                   style="--uc-nav-height: 8px"
                 >
-                  <li>
+                  <li class="mt-4">
                     <a href="/">
                       <img
-                        class="w-120px h-100px"
+                        class="w-120px h-72px"
                         src="/Images/demo-seven/common/new-logo.png"
                         alt="News5"
                         data-uc-svg
@@ -116,7 +116,13 @@
                     v-for="(item, key) in categories"
                     :key="key"
                   >
-                    <a :href="`/category/${item.slug}`">{{ item.title }} </a>
+                    <a :href="`/category/${item.slug}`"
+                      >{{
+                        item.title == "StockMarket"
+                          ? "Stock Market"
+                          : item.title
+                      }}
+                    </a>
                   </li>
                 </ul>
               </div>

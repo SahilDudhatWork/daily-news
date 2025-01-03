@@ -1,7 +1,17 @@
+import $axios from "./plugins/axios";
+
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
-  ssr: false,
-  pages: true,
+  target: "static", // Enable static site generation
+
+  ssr: false, // Enable SSR for proper meta tag generation
+  // pages: true,
+  generate: {
+    routes: async () => {
+      const res = await $axios.get("/get-all-post");
+      return res.data.posts.map((post) => `/${post.slug}`);
+    },
+  },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {

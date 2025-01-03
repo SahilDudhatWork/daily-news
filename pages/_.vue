@@ -70,8 +70,9 @@
           <div
             class="post-content panel fs-6 md:fs-5"
             data-uc-lightbox="animation: scale"
-            v-html="singlePost?.post.body"
+            v-html="processedHtml"
           ></div>
+          <div data-type="_mgwidget" data-widget-id="1717789"></div>
 
           <div
             class="post-navigation panel vstack sm:hstack justify-between gap-2 mt-8 xl:mt-9"
@@ -485,61 +486,66 @@ import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   name: "blog",
   head() {
-    console.log("this.singlePost?.post?.image", this.singlePost?.post?.image);
     return {
       title: this.singlePost?.post.title,
+      script: [
+        {
+          src: "https://jsc.adskeeper.com/site/1005501.js",
+          async: true,
+        },
+      ],
       meta: [
         {
           name: "google-adsense-account",
           content: "ca-pub-7232228922121987",
         },
-        {
-          itemprop: "og:image",
-          content: this.singlePost?.post?.image,
-        },
-        {
-          itemprop: "description",
-          content: this.singlePost?.post?.excerpt,
-        },
-        {
-          itemprop: "og:title",
-          content: this.singlePost?.post?.title,
-        },
-        {
-          hid: "og:image",
-          property: "og:image",
-          content: this.singlePost?.post?.image,
-        },
-        {
-          hid: "description",
-          name: "description",
-          content: this.singlePost?.post?.excerpt,
-        },
-        {
-          hid: "og:title",
-          property: "og:title",
-          content: this.singlePost?.post?.title,
-        },
-        {
-          hid: "og:description",
-          property: "og:description",
-          content: this.singlePost?.post?.excerpt,
-        },
-        {
-          hid: "og:image",
-          property: "og:image",
-          content: this.singlePost?.post?.image,
-        },
-        {
-          hid: "og:image:width",
-          property: "og:image:width",
-          content: "1280",
-        },
-        {
-          hid: "og:image:height",
-          property: "og:image:height",
-          content: "720",
-        },
+        // {
+        //   itemprop: "og:image",
+        //   content: this.singlePost?.post?.image,
+        // },
+        // {
+        //   itemprop: "description",
+        //   content: this.singlePost?.post?.excerpt,
+        // },
+        // {
+        //   itemprop: "og:title",
+        //   content: this.singlePost?.post?.title,
+        // },
+        // {
+        //   hid: "og:image",
+        //   property: "og:image",
+        //   content: this.singlePost?.post?.image,
+        // },
+        // {
+        //   hid: "description",
+        //   name: "description",
+        //   content: this.singlePost?.post?.excerpt,
+        // },
+        // {
+        //   hid: "og:title",
+        //   property: "og:title",
+        //   content: this.singlePost?.post?.title,
+        // },
+        // {
+        //   hid: "og:description",
+        //   property: "og:description",
+        //   content: this.singlePost?.post?.excerpt,
+        // },
+        // {
+        //   hid: "og:image",
+        //   property: "og:image",
+        //   content: this.singlePost?.post?.image,
+        // },
+        // {
+        //   hid: "og:image:width",
+        //   property: "og:image:width",
+        //   content: "1280",
+        // },
+        // {
+        //   hid: "og:image:height",
+        //   property: "og:image:height",
+        //   content: "720",
+        // },
       ],
     };
   },
@@ -553,6 +559,42 @@ export default {
       singlePost: "getSinglePost",
       categoriesWithPost: "getCategoriesWithPost",
     }),
+    processedHtml() {
+      return this.singlePost?.post.body
+        .replace(/<oembed url="(.*?)"><\/oembed>/g, (match, url) => {
+          // Convert the oembed URL to iframe
+          const videoId = new URL(url).searchParams.get("v");
+          if (videoId) {
+            return `<div class="featured-image m-0 ratio ratio-2x1 rounded uc-transition-toggle overflow-hidden bg-gray-25 dark:bg-gray-800">
+                      <iframe 
+                        src="https://www.youtube.com/embed/${videoId}" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                      </iframe>
+                    </div>`;
+          }
+          return "";
+        })
+        .replace(
+          /<a href="(https:\/\/www\.instagram\.com\/reel\/[^\s"]+)"[^>]*>.*?<\/a>/g,
+          (match, url) => {
+            return `<blockquote class="instagram-media" 
+                      data-instgrm-permalink="${url}" 
+                      data-instgrm-version="14" 
+                      style="background:#FFF; border:0; margin:0 auto; max-width:540px; padding:0; width:99.375%;">
+                    </blockquote>`;
+          }
+        )
+        .replace(
+          /<a href="(https:\/\/x\.com\/[^\s"]+)"[^>]*>.*?<\/a>/g,
+          (match, url) => {
+            return `<blockquote class="twitter-tweet">
+                      <a href="${url}"></a>
+                    </blockquote>`;
+          }
+        );
+    },
   },
   methods: {
     ...mapActions({
@@ -593,7 +635,41 @@ export default {
         this.initAds();
       }
     }
+    (function (w, q) {
+      w[q] = w[q] || [];
+      w[q].push(["_mgc.load"]);
+    })(window, "_mgq");
     await this.fetchCategoriesWithPost({});
+
+    // Load Instagram script for embedding
+    if (!window.instgrm) {
+      const script = document.createElement("script");
+      script.src = "https://www.instagram.com/embed.js";
+      script.async = true;
+      document.body.appendChild(script);
+    } else {
+      // Process Instagram embeds
+      window.instgrm.Embeds.process();
+    }
+
+    // Load Twitter script for embedding
+    if (!window.twttr) {
+      const twtScript = document.createElement("script");
+      twtScript.src = "https://platform.twitter.com/widgets.js";
+      twtScript.async = true;
+      document.body.appendChild(twtScript);
+    } else {
+      window.twttr.widgets.load();
+    }
+  },
+  updated() {
+    // Ensure Instagram and Twitter embeds are processed on updates
+    if (window.instgrm) {
+      window.instgrm.Embeds.process();
+    }
+    if (window.twttr) {
+      window.twttr.widgets.load();
+    }
   },
 
   async asyncData({ params, store }) {
@@ -610,5 +686,11 @@ export default {
 .article {
   overflow-y: auto;
   max-height: 100vh;
+}
+.instagram-media,
+.twitter-tweet {
+  margin: 0 auto;
+  max-width: 100%;
+  width: 100%;
 }
 </style>
